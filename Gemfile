@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+ruby '>=3.3.0'
+
 source "https://rubygems.org"
 
 gem "jekyll-theme-chirpy", "~> 7.2", ">= 7.2.4"
