@@ -26,11 +26,14 @@ h3, h4, h5, h6 {
   color: #d93c3c;
 }
 
-.highlight {
+.highlighter-rouge {
+  border-radius: 0.25rem !important;
+}
+
+.highlight, .highlight pre {
   padding: .5rem;
   margin-bottom: 1.2rem;
   font-size: .8rem;
   line-height: 1.4;
-  background-color: #f9f9f9;
-  border-radius: .25rem;
+  border-radius: .25rem !important;
 }

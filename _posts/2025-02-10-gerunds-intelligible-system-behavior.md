@@ -89,44 +89,7 @@ I’ll say again, anything is better than a god model or an epidemic of controll
 
 ## Gerunds? Gerunds!
 
-<div style="width: 49%; float:left">
-<h3>"The Other Brand"</h3>
-<div class="language-ruby highlighter-rouge"><div class="highlight" style="padding: 0"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Song</span><span class="o">::</span><span class="no">Create</span> <span class="o">&lt;</span> <span class="no">Trailblazer</span><span class="o">::</span><span class="no">Operation</span>
-  <span class="n">step</span> <span class="no">Model</span><span class="p">(</span><span class="no">Song</span><span class="p">,</span> <span class="ss">:new</span><span class="p">)</span>
-  <span class="n">step</span> <span class="no">Policy</span><span class="o">::</span><span class="no">Pundit</span><span class="p">(</span><span class="no">Application</span><span class="o">::</span><span class="no">Policy</span><span class="p">,</span> <span class="ss">:create?</span><span class="p">)</span>
-  <span class="n">step</span> <span class="no">Contract</span><span class="o">::</span><span class="no">Build</span><span class="p">(</span><span class="ss">constant: </span><span class="no">Song</span><span class="o">::</span><span class="no">Contract</span><span class="o">::</span><span class="no">Create</span><span class="p">)</span>
-  <span class="n">step</span> <span class="no">Contract</span><span class="o">::</span><span class="no">Validate</span><span class="p">()</span>
-  <span class="n">step</span> <span class="no">Contract</span><span class="o">::</span><span class="no">Persist</span><span class="p">()</span>
-  <span class="nb">fail</span> <span class="no">Notifier</span><span class="o">::</span><span class="no">DBError</span>
-  <span class="n">step</span> <span class="ss">:update_song_count!</span>
-
-  <span class="k">def</span> <span class="nf">update_song_count!</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">current_user</span><span class="p">:,</span> <span class="o">**</span><span class="p">)</span>
-    <span class="n">current_user</span><span class="p">.</span><span class="nf">increment_song_counter</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div></div>
-
-</div>
-
-<div style="width: 49%; float:right">
-<h3>Gerunds</h3>
-<div class="language-ruby highlighter-rouge"><div class="highlight" style="padding: 0"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Song</span><span class="o">::</span><span class="no">Composing</span> <span class="o">&lt;</span> <span class="no">Song</span>
-  <span class="kp">include</span> <span class="no">Gerund</span> <span class="c1"># disables AR's STI</span>
-
-  <span class="n">validates</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">:composer</span><span class="p">,</span>
-    <span class="ss">presence: </span><span class="kp">true</span>
-
-  <span class="n">after_save</span> <span class="ss">:update_song_count!</span>
-
-  <span class="k">def</span> <span class="nf">update_song_count!</span>
-    <span class="n">composer</span><span class="p">.</span><span class="nf">increment_song_counter</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-
-</code></pre></div></div>
-
-</div>
-<div style="clear: both;" />
+!["The Other Brand" vs Gerunds](/other-vs-gerunds.png)
 
 **A gerund is all the code for a particular business concern, built by extending a core “barely smart data” domain model.**
 
