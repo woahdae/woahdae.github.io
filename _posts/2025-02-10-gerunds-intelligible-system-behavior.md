@@ -62,7 +62,7 @@ Let’s skim over how some other common architectures fare in terms of complexit
 
 ## Robert Martin’s “Clean Architecture”?
 
-![Clean Architecture](/clean-architecture.png)
+![Clean Architecture](/clean-architecture.jpg)
 
 * **Entities** “business objects”
 * **Interactors** “business logic”
@@ -74,7 +74,7 @@ You pass data blobs (ex. JSON) as messages between components. In addition to en
 
 From their documentation:
 
-![Trailblazer](/trailblazer.png)
+![Trailblazer](/trailblazer.jpg)
 
 * **Contract** Form objects to validate incoming data.
 * **Policy** to authorize code execution per user.
@@ -87,7 +87,7 @@ I’ll say again, anything is better than a god model or an epidemic of controll
 
 ## Gerunds? Gerunds!
 
-!["The Other Brand" vs Gerunds](/other-vs-gerunds.png)
+!["The Other Brand" vs Gerunds](/other-vs-gerunds.jpg)
 
 **A gerund is all the code for a particular business concern, built by extending a core “barely smart data” domain model.**
 
