@@ -24,9 +24,7 @@ image:
 
 _Welcome to my series on OOP architecture. I’ve been leading small OO and
 functional programming teams for almost 20 years, and I’ll be sharing ideas
-about growing software that is as easy to grow 10 years later as it was when
-the project started._
-
+about growing software from prototype to the most majestic of monoliths.
 ---
 
 ## Defining the problem
