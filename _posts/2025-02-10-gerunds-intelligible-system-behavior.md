@@ -24,7 +24,7 @@ image:
 
 _Welcome to my series on OOP architecture. I’ve been leading small OO and
 functional programming teams for almost 20 years, and I’ll be sharing ideas
-about growing software from prototype to the most majestic of monoliths.
+about growing software from prototype to the most majestic of monoliths._
 ---
 
 ## Defining the problem
