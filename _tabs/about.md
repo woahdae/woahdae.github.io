@@ -4,6 +4,8 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-I've spent 20 years keeping Rails monoliths maintainable and productive. Currently CTO at [InPlay](https://www.inplay.org/) serving parents, school districts, and students. AI will either make architecture obsolete or critically important. I will be farming, or gainfully employed and writing about it.
+I've spent 20 years keeping Rails monoliths maintainable and productive. Currently CTO at [InPlay](https://www.inplay.org/) serving parents, school districts, and students.
 
-[GitHub](https://github.com/woahdae) · [X](https://x.com/woahdae) · [Email](mailto:woody.peterson@gmail.com)
+AI will either make architecture obsolete or critically important. I will be farming, or gainfully employed and writing about it.
+
+[GitHub](https://github.com/woahdae) · [X](https://x.com/woahdae) · <a href="javascript:location.href='mailto:'+['woody.peterson','gmail.com'].join('@')">Email</a>
