@@ -23,7 +23,7 @@ image:
 *[DI]: Dependency Injection
 *[STI]: Single Table Inheritance
 
-_I've been leading small OO teams for almost 20 years. The following started as a talk I gave at Seattle.rb promoting a lightweight, PORO, but potentially controversial alternative to popular heavy-weight architectures like [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), and [Trailblazer](http://trailblazer.to/). I've been using it in production for over a decade now, on a monolith that serves 500,000+ students. It scales. It's boring. It works._
+_I've been leading small OO teams for almost 20 years. The following started as a talk I gave at Seattle.rb promoting a lightweight, PORO, but potentially controversial alternative to popular heavy-weight architectures like [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), and [Trailblazer](https://trailblazer.to/). I've been using it in production for over a decade now, on a monolith that serves 500,000+ students. It scales. It's boring. It works._
 
 ---
 
@@ -51,7 +51,7 @@ So, they proposed a fix that looks like this:
 
 I actually think DCI is really smart, but... yikes. DCI could probably handle any level of complexity, which is a good tool to have in your pocket. If you just want to put a bit of registration logic somewhere other than User, though, it's not worth pulling in all that extra jargon. I don't need a `Context` to manage a `Role` to extend the `User` so it can participate in a registration `Interaction` - there's just got to be a more natural way.
 
-**This post is about a simple technique I've been using for over a decade that can serve as the alternative to adopting [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), [Trailblazer](http://trailblazer.to/), or the like.** I've used it on a monolith serving 500,000+ students, and it's scaled our ever-growing business logic and use cases brilliantly (in my biased opinion). You can draw your own conclusions.
+**This post is about a simple technique I've been using for over a decade that can serve as the alternative to adopting [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), [Trailblazer](https://trailblazer.to/), or the like.** I've used it on a monolith serving 500,000+ students, and it's scaled our ever-growing business logic and use cases brilliantly (in my biased opinion). You can draw your own conclusions.
 
 ##### The good news
 
@@ -527,17 +527,17 @@ end
 
 OK, I have lots of other loving examples, but this post is long enough. I think that makes the point.
 
-Let's switch gears to a comparison of a great off-the-shelf Rails architecture project: [Trailblazer](http://trailblazer.to).
+Let's switch gears to a comparison of a great off-the-shelf Rails architecture project: [Trailblazer](https://trailblazer.to).
 
 ### Trailblazer vs Gerunds
 
-To be clear, I like [Trailblazer](http://trailblazer.to). It's done a great job of synthesizing the various architectural advice over the last decade, including thoughtful project organization and good separation of concerns. If I cracked open someone's project and found Trailblazer, I'd be stoked.
+To be clear, I like [Trailblazer](https://trailblazer.to). It's done a great job of synthesizing the various architectural advice over the last decade, including thoughtful project organization and good separation of concerns. If I cracked open someone's project and found Trailblazer, I'd be stoked.
 
 However, like all the architectures we've considered, the benefits come at a cost: big buy-in, commitment, and a lot of extra jargon making noise in your domain modeling.
 
 Using inheritance-based gerunds, I think we can do even better at a fraction of the cost.
 
-Consider this example from the [Trailblazer homepage](http://trailblazer.to):
+Consider this example from the [Trailblazer homepage](https://trailblazer.to):
 
 ``` ruby
 class Song < ActiveRecord::Base
