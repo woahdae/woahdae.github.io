@@ -1,18 +1,28 @@
 ---
 layout: post
-title: 'Gerunds: a simple solution to architecture exhaustion'
+title:  "Gerunds: a simple solution to architecture exhaustion"
 date:   2019-11-08 19:02:57
-last_modified_at: 2026-04-12 08:00 -0700
-author: woahdae
-categories: [Technology, Architecture]
-tags: [rails, ruby, architecture, gerunds]
-description: >
-  A simple OO primitive for colocating business logic — no frameworks,
-  no jargon, no dependencies.
-media_subpath: /assets/img/gerunds-intelligible-system-behavior/
-image:
-  path: /hero.jpg
-  alt:
+last_modified_at: 2021-06-02 07:00:00
+category: tech
+img: 'gerunds-a-simple-solution-to-architecture-exhaustion/architecture-monster.jpg'
+img_thumb: 'gerunds-a-simple-solution-to-architecture-exhaustion/architecture-monster.jpg'
+img_alt: 'Architecture monster'
+excerpt: >
+  If you do backend or full stack software engineering with OOP frameworks like Rails, Django, and similar, I have something I'd like you to try. It's a simple, natural way to express behavior that's either bloating models, or is spread around various architectural components like service objects, form models, presenters, and similar.
+sidebar_extra: >
+  <div class="sidebar-extra">
+    <blockquote>
+      <p>
+        Make Ruby natural, not simple, in a way that mirrors life.
+      </p>
+    </blockquote>
+
+    <p>
+      <cite>
+        ― Yukihiro Matsumoto
+      </cite>
+    </p>
+  </div>
 ---
 
 *[PORO]: Plain Old Ruby Object
@@ -23,7 +33,7 @@ image:
 *[DI]: Dependency Injection
 *[STI]: Single Table Inheritance
 
-_I've been leading small OO teams for almost 20 years. The following started as a talk I gave at Seattle.rb promoting a lightweight, PORO, but potentially controversial alternative to popular heavy-weight architectures like [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), and [Trailblazer](http://trailblazer.to/). I've been using it in production for over a decade now, on a monolith that serves 500,000+ students. It scales. It's boring. It works._
+_The following is the more engaging parts from a talk I gave at Seattle.rb promoting a lightweight, PORO, but potentially controversial alternative to popular heavy-weight architectural solutions like [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), and [Trailblazer](http://trailblazer.to/)._
 
 ---
 
@@ -35,8 +45,8 @@ You have to admit though - wasn't it nice when your app was smaller, and your do
 
 I mean, transparent domain modeling was the original promise of Model-View-Controller (MVC). You're supposed to spend most of your energy translating users' mental models to code - the M - and let views and controllers expose it to the world:
 
-![MVC](/mvc.jpg)
-*The DCI Architecture: A New Vision of Object-Oriented Programming*
+![MVC](/img/gerunds-a-simple-solution-to-architecture-exhaustion/mvc.jpg)
+<div class="img-caption">The DCI Architecture: A New Vision of Object-Oriented Programming</div>
 
 Well, the authors of Model-View-Controller realized OOP was missing something:
 
@@ -46,12 +56,12 @@ Well, the authors of Model-View-Controller realized OOP was missing something:
 
 So, they proposed a fix that looks like this:
 
-![DCI](/dci.jpg)
-*The DCI Architecture: A New Vision of Object-Oriented Programming*
+![DCI](/img/gerunds-a-simple-solution-to-architecture-exhaustion/dci.jpg)
+<div class="img-caption">The DCI Architecture: A New Vision of Object-Oriented Programming</div>
 
 I actually think DCI is really smart, but... yikes. DCI could probably handle any level of complexity, which is a good tool to have in your pocket. If you just want to put a bit of registration logic somewhere other than User, though, it's not worth pulling in all that extra jargon. I don't need a `Context` to manage a `Role` to extend the `User` so it can participate in a registration `Interaction` - there's just got to be a more natural way.
 
-**This post is about a simple technique I've been using for over a decade that can serve as the alternative to adopting [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), [Trailblazer](http://trailblazer.to/), or the like.** I've used it on a monolith serving 500,000+ students, and it's scaled our ever-growing business logic and use cases brilliantly (in my biased opinion). You can draw your own conclusions.
+**This post is about a simple technique I've been experimenting with for a couple years that can serve as the step prior to adopting [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), [Trailblazer](http://trailblazer.to/), or the like.** This technique might scale just as well or better, actually, but I haven't tried it for _that_ long so I won't presume.
 
 ##### The good news
 
@@ -93,16 +103,16 @@ How do we express actions in natural language? With gerunds, aka _-ing_ words:
 
 <style>
 .gerund-examples {
-  color: white;
-  background-color: black;
-  border-radius: 10px;
-  padding-left: 33%;
+  margin-left: 1.5rem;
+}
+@media (min-width: 30em) {
+  .gerund-examples {
+    margin-left: 11vw;
+  }
 }
 </style>
 
 <div class="gerund-examples">
-
-  <div style="clear: both; padding-top: 1rem"></div>
 
   <span style="float: left; padding-right: 10px; text-align: center">
     <u>Tyrion Lannister</u>
@@ -230,7 +240,11 @@ This is what the [Gang of Four](https://en.wikipedia.org/wiki/Design_Patterns) h
 
 Well, I've tried many times to like them. I forget what all I've tried at this point, but it includes popular delegation-based gems like [Draper](https://github.com/drapergem/draper) and [cells](https://github.com/trailblazer/cells), a [refinement-based presenter gem](https://github.com/kmdsbng/sexy_presenter), even just [rolling my own presenters](https://christoph.luppri.ch/articles/rails/handmade-rails-presenters/) via `SimpleDelegator`.
 
-They all share a fundamental problem. Let me demonstrate.
+As a real-world example, [InPlay](https://www.inplay.org) (my startup) extends `Schedule` domain models with some display helpers. Sometimes we want to index the output of the helpers into Elasticsearch or consume them in the React-based part of our website, both depending on `to_json`. This is in addition to normal server-side-rendered pages in the rest of the site that use the schedules in plain Ruby.
+
+Surprisingly, all of the above-mentioned decorator strategies would fail to work for my use case.
+
+Here's a simplified example to expose the issue:
 
 ##### TodoItem extended with a decorator
 
@@ -251,7 +265,7 @@ class TodoItemPresenter < SimpleDelegator
 end
 ```
 
-<small><i>Implementation note: ActiveSupport provides `Object#to_json`, returning a JSON string, which JSON-ifies the hash returned by `Object#as_json`, also provided by ActiveSupport</i></small>
+<small><i>Implementation note: ActiveSupport provides `Object#to_json`, returning a JSON string, which JSON-ifies the hash returned by `Object#as_json`, aslo provided by ActiveSupport</i></small>
 
 Let's see what happens when we try to use, in the [Gang](https://en.wikipedia.org/wiki/Design_Patterns)'s words, this "flexible alternative to subclassing:"
 
@@ -266,7 +280,7 @@ presenter = TodoItemPresenter.new(item)
 presenter.name
 #=> "Foo"
 
-# Yep, titleized. Now let's try getting some JSON:
+# Yep, titlized. Now let's try getting some JSON:
 
 presenter.as_json
 #=> {name: "foo", id: 1, path: "/todo_items/1"}
@@ -295,13 +309,15 @@ Why doesn't this work as you initially expect?
 1. `TodoItem#to_json` calls `TodoItem#as_json` _**not**_ `TodoItemPresenter#as_json`.
 1. There is no 3. It never touches `TodoItemPresenter#as_json` so we get none of our extended functionality.
 
-This issue is also referred to as [self-schizophrenia](https://en.wikipedia.org/wiki/Schizophrenia_(object-oriented_programming)) in OOP — the decorated object doesn't know about its decorator, so any self-referential calls bypass the decoration entirely. It's important to point out the inaccuracy of this term, though. It means to describe a mental break involving multiple identities, but if we _must_ make mental health analogies, this would be [dissociative identity disorder](https://en.wikipedia.org/wiki/Dissociative_identity_disorder). Among all the things a person with schizophrenia will suffer, changing among multiple personalities is not one of them. 🤷‍♂️
-
-Wikipedia's [composition over inheritance drawbacks](https://en.wikipedia.org/wiki/Composition_over_inheritance#Drawbacks) puts it diplomatically:
+I was happy to notice this issue mentioned in Wikipedia's [drawbacks section of the composition over inheritance entry](https://en.wikipedia.org/wiki/Composition_over_inheritance#Drawbacks):
 
 > One common drawback of using composition instead of inheritance is that methods being provided by individual components may have to be implemented in the derived type.
+>
+> — [Wikipedia](https://en.wikipedia.org/wiki/Composition_over_inheritance#Drawbacks)
 
-Considering all this, are decorators really a "flexible alternative to subclassing?" They're *an* alternative, and flexible due to having no predefined relationship with the decorated object, but also have some potentially surprising behavior exactly because of that lack of relationship. They really aren't a great choice for extending domain models.
+This issue is also referred to more broadly as [self-schizophrenia](https://en.wikipedia.org/wiki/Schizophrenia_(object-oriented_programming)), although it's important to point out the innacuracy of this term. It means to describe a mental break involving multiple identities, but if we _must_ make mental health analogies, this would be [dissociative identity disorder](https://en.wikipedia.org/wiki/Dissociative_identity_disorder). Among all the things a person with schizophrenia will suffer, changing among multiple personalities is not one of them. 🤷‍♂️
+
+Anyways, considering all this, are decorators really a "flexible alternative to subclassing?" They're *an* alternative, and flexible due to having no predefined relationship with the decorated object, but also have some potentially surprising behavior exactly because of that lack of relationship. They really aren't a great choice for extending domain models.
 
 Even though we haven't gone in depth about re-embracing inheritance yet (we will next), since the presenter is fresh in your mind, let's go ahead and compare the presenter with an inheritance-based implementation.
 
@@ -338,16 +354,18 @@ item.as_json
 #=> {name: "Foo", id: 1, path: "/todo_items/1"}
 
 item.to_json
-#=> '{"name": "Foo", "id": 1, "path": "/todo_items/1"}'
+#=> %s({"name": "Foo", "id": 1, "path": "/todo_items/1"})
 ```
 
 We get everything we want, and remove a layer of jargon while we're at it.
 
+<span style="font-size: 2rem">
 🎉
+</span>
 
 ## Yes, really, inheritance over composition sometimes
 
-There is deeply ingrained cultural wisdom among senior developers to prefer composition over inheritance ([Design Patterns](https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612) (1994)), and with decent reason. See the [Wikipedia page on composition over inheritance](https://en.wikipedia.org/wiki/Composition_over_inheritance) for an overview, but TL;DR using inheritance for modeling complex combinations of behavior can quickly get obtuse, or might even be impossible, depending on your use case.
+There is deeply ingrained cultural wisdom among Senior developers to prefer composition over inheritance ([Design Patterns](https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612) (1994)), and with decent reason. See the [wikipedia page on composition over inheritance](https://en.wikipedia.org/wiki/Composition_over_inheritance)  for an overview, but TL;DR using inheritance for modeling complex combinations of behavior can quickly get obtuse, or might even be impossible, depending on your use case.
 
 Let's break it down. Why are we to prefer composition over inheritance?
 
@@ -361,15 +379,17 @@ Let's break it down. Why are we to prefer composition over inheritance?
 
 Wikipedia's example, from _Head First Design Patterns_ (2004), demonstrates how one could implement various kinds of duck calls and flight methods to be specified at runtime.
 
-For example, you could instantiate a duck, who at first might use `CannotFly` as its flying behavior, to be upgraded to `FlyWithWings`, and if it's lucky, `FlyRocketPowered`. Perhaps its rockets break, so it's downgraded to the `FlyWithWings` behavior. Critically, **you could do this all on the same long-lived `Duck` instance**, and with this strategy pattern you could change the behavior all day long without issue.
+For example, you could instantiate a duck, who at first might use `CannotFly`  as it's flying behavior, to be upgraded to `FlyWithWings`, and if it's lucky, `FlyRocketPowered`. Perhaps its rockets break, so it's downgraded to the `FlyWithWings` behavior. Critically, **you could do this all on the same long-lived `Duck` instance**, and with this strategy pattern you could change the behavior all day long without issue.
 
-Due to the short-lived nature of domain models in Rails' request/response cycle, in 20 years of coding Rails apps, **I've needed to do something like this on a domain model exactly zero times**.
+Due to the short-lived nature of domain models in Rails' request/response cycle, in 12 years of coding Rails apps, **I've needed to do something like this on a domain model exactly zero times**. 
 
+<span style="font-size: 2rem">
 🤔
+</span>
 
 ##### Inheritance is bad at sharing code
 
-I ran across this article, [Goodbye Object-Oriented Programming](https://medium.com/@cscalfani/goodbye-object-oriented-programming-a59cda4c0e53), which does a good job of highlighting the downsides of inheritance (and more). TL;DR complex inheritance hierarchies for sharing code makes for bad times. Go read it if you need convincing, it'll save me some keystrokes.
+I recently ran across this article, [Goodbye Object-Oriented Programming](https://medium.com/@cscalfani/goodbye-object-oriented-programming-a59cda4c0e53), which does a good job of highlighting the downsides of inheritance (and more). TL;DR complex inheritance hierarchies for sharing code makes for bad times. Go read it if you need convincing, it'll save me some keystrokes.
 
 Unlike that article though, my conclusion isn't to throw away OOP entirely.
 
@@ -395,11 +415,11 @@ I use one of two ways to share code in gerunds, both of which keep the naming co
 
 **One**, keep the use-case-specific gerunds and share code any old way - module-based multiple inheritance, delegation to a service object, whatever.
 
-For example, if you had `Payment::CreditCard::Processing` and `Payment::Bitcoin::Processing` that already inherited from their respective payment subtypes, a `Payment::BaseProcessing` module could share validations while `*::Processing` implement different authorize and capture strategies.
+For example, if you had `Payment::CreditCard::Proccessing` and `Payment::Bitcoin::Processing` that already inherited from their respective payment subtypes, a `Payment::BaseProcessing` module could share validations while `*::Processing` implement different authorize and capture strategies.
 
 **Two**, you could implement the behavior in a module meant to be applied at runtime.
 
-For example, you could extend a `Payment` instance with a `Payment::Processing` module before the payment is saved. Inspired by DCI, I had good results putting action-specific behavior in runtime extensions before reading [Growing Rails Applications in Practice](#further-reading), where they advocate for simple inheritance. I haven't had a need for runtime extension recently, but I consider it definitely on the table.
+For example, you could extend a `Payment` instance with a `Payment::Processing` module before the payment is saved. Inspired by DCI, I had good results putting action-specific behavior in runtime extensions before reading [Growing Rails Applications in Practice](#further-reading), where they advocate for simple inheritance. I haven't had a need to runtime extension recently, but I consider it definitely on the table.
 
 Performance note: prior to Ruby 2.1 there was a performance penalty for runtime extension, but [I've personally measured that it is now a non-issue](https://github.com/woahdae/transcience).
 
@@ -411,7 +431,7 @@ Important sidebar before our deep dive into examples: **gerunds also let you rec
 
 Callbacks on core models have fallen out of fashion, and for very good reason. They will inevitably become a central source of complexity as a project grows, since sometimes you'll want them, sometimes you won't.
 
-When (not if) someone messes up the conditionals managing your callbacks, and when (not if) someone accidentally triggers one that's not supposed to run in a data backfill, it can be a real bummer. Every Rails project I've worked on, even while contracting, has accidentally sent an email blast to users due to a data migration or backfill accident with callbacks! 😮
+When (not if) someone messes up the conditionals managing your callbacks, and when (not if) someone accidentally triggers one that's not supposed to run in ex. a data backfill, it can be a real bummer. Every Rails project I've worked on, even while contracting, has accidentally sent an email blast to users due to a data migration or backfill accident with callbacks! 😮
 
 So trust me, I know the dangers of callbacks. However, if your callbacks are contained inside behavior-specific gerunds, there is no risk of conflict with other use cases or accidental triggering.
 
@@ -475,7 +495,7 @@ class User::Registering < User
 end
 ```
 
-<small><i>See [gerund module implementation](#appendix)</i></small>
+<small><i>See [gurund module implementation](#appendix)</i></small>
 
 **Advantages**:
 
@@ -580,13 +600,53 @@ class Song::Composing < Song
 end
 ```
 
-<small><i>See [gerund module implementation](#appendix)</i></small>
+<small><i>See [gurund module implementation](#appendix)</i></small>
 
 **Advantages**:
 
 * **Avoids dependency injection overkill**: Because the Trailblazer operation has no class-based relationship to `Song`, you must pass in dependencies - specifically, whom I assume is the `composer`, but whom the operation labels `current_user`. Dependency injection is a fine tool, and there's something to be said about avoiding side-effects. You could add a `current_user` method to keep DI, but we also have the option to instead use `composer` directly until such a time as we actually need DI to satisfy the use case.
 * **PO[Rails]O** (Plain 'ol Rails Object): The gerund uses stock ActiveModel, nothing else to depend on or learn.
 * **Naming**: IMO, the naming convention better expresses the use case, but I know naming is a very personal thing. Plus it's had time to grow on me.
+
+Let's see these side-by-side:
+
+<div style="width: 49%; float:left">
+
+<div class="language-ruby highlighter-rouge"><div class="highlight" style="padding: 0"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Song</span><span class="o">::</span><span class="no">Create</span> <span class="o">&lt;</span> <span class="no">Trailblazer</span><span class="o">::</span><span class="no">Operation</span>
+  <span class="n">step</span> <span class="no">Model</span><span class="p">(</span><span class="no">Song</span><span class="p">,</span> <span class="ss">:new</span><span class="p">)</span>
+  <span class="n">step</span> <span class="no">Policy</span><span class="o">::</span><span class="no">Pundit</span><span class="p">(</span><span class="no">Application</span><span class="o">::</span><span class="no">Policy</span><span class="p">,</span> <span class="ss">:create?</span><span class="p">)</span>
+  <span class="n">step</span> <span class="no">Contract</span><span class="o">::</span><span class="no">Build</span><span class="p">(</span><span class="ss">constant: </span><span class="no">Song</span><span class="o">::</span><span class="no">Contract</span><span class="o">::</span><span class="no">Create</span><span class="p">)</span>
+  <span class="n">step</span> <span class="no">Contract</span><span class="o">::</span><span class="no">Validate</span><span class="p">()</span>
+  <span class="n">step</span> <span class="no">Contract</span><span class="o">::</span><span class="no">Persist</span><span class="p">()</span>
+  <span class="nb">fail</span> <span class="no">Notifier</span><span class="o">::</span><span class="no">DBError</span>
+  <span class="n">step</span> <span class="ss">:update_song_count!</span>
+
+  <span class="k">def</span> <span class="nf">update_song_count!</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">current_user</span><span class="p">:,</span> <span class="o">**</span><span class="p">)</span>
+    <span class="n">current_user</span><span class="p">.</span><span class="nf">increment_song_counter</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+</div>
+
+<div style="width: 49%; float:right">
+
+<div class="language-ruby highlighter-rouge"><div class="highlight" style="padding: 0"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Song</span><span class="o">::</span><span class="no">Composing</span> <span class="o">&lt;</span> <span class="no">Song</span>
+  <span class="kp">include</span> <span class="no">Gerund</span> <span class="c1"># disables AR's STI</span>
+
+  <span class="n">validates</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">:composer</span><span class="p">,</span>
+    <span class="ss">presence: </span><span class="kp">true</span>
+
+  <span class="n">after_save</span> <span class="ss">:update_song_count!</span>
+
+  <span class="k">def</span> <span class="nf">update_song_count!</span>
+    <span class="n">composer</span><span class="p">.</span><span class="nf">increment_song_counter</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+</div>
+<div style="clear: both;" />
 
 Woah.
 
@@ -606,7 +666,9 @@ Finally, putting all this under the "gerund" umbrella lets us cover many of thes
 
 Aaaaaaand no external dependencies, plus conceptual compatibility with many heavier-weight architectures.
 
+<span style="font-size: 3rem">
 🍻
+</span>
 
 Here again is what we covered:
 
@@ -617,11 +679,11 @@ Here again is what we covered:
 * [My own experiences growing Rails with gerunds](#my-own-experiences-growing-rails-with-gerunds)
 * [Trailblazer vs gerunds](#trailblazer-vs-gerunds)
 
-Thanks for reading, and I'll see you in the comments!
+Thanks for reading, and I'll see you in the [comments](#commentbox)!
 
 ---
 
-##### Further reading
+##### Further reading:
 
 [Growing Rails Applications in Practice](https://leanpub.com/growing-rails)
 
@@ -643,7 +705,7 @@ TL;DR, [decorators will getcha](#hating-on-decorators) and module extension is p
 
 **The Gerund module**
 
-Currently just disables STI, but also a placeholder if we want to make view helpers more accessible in the future.
+Currently just disables STI, but also a placeholder if we want to ex. make view helpers more accessible in the future.
 
 ``` ruby
 module Gerund
