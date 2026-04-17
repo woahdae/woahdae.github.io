@@ -7,8 +7,8 @@ author: woahdae
 categories: [Technology, Architecture]
 tags: [rails, ruby, architecture, gerunds]
 description: >
-  A simple OO primitive for colocating business logic — no frameworks,
-  no jargon, no dependencies.
+  A lightweight alternative to OO architectures, service objects, decorators,
+  view models, etc.
 media_subpath: /assets/img/gerunds-intelligible-system-behavior/
 image:
   path: /hero.jpg
@@ -23,7 +23,7 @@ image:
 *[DI]: Dependency Injection
 *[STI]: Single Table Inheritance
 
-_I've been leading small OO teams for almost 20 years. The following started as a talk I gave at Seattle.rb promoting a lightweight, PORO, but potentially controversial alternative to popular heavy-weight architectures like [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), and [Trailblazer](https://trailblazer.to/). I've been using it in production for over a decade now, on a monolith that serves 500,000+ students. It scales. It's boring. It works._
+_The following is the more engaging parts from a talk I gave at Seattle.rb promoting a lightweight, PORO, but potentially controversial alternative to popular heavy-weight architectural solutions like [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), and [Trailblazer](https://trailblazer.to/)._
 
 ---
 
