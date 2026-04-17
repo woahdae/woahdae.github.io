@@ -1,4 +1,5 @@
 ---
+
 layout: post
 title: 'Gerunds: a simple solution to architecture exhaustion'
 date:   2019-11-08 19:02:57
@@ -38,22 +39,28 @@ I mean, transparent domain modeling was the original promise of Model-View-Contr
 ![MVC](/mvc.jpg)
 *The DCI Architecture: A New Vision of Object-Oriented Programming*
 
+&nbsp;
+
 Well, the authors of Model-View-Controller realized OOP was missing something:
 
 > While objects capture structure well, they fail to capture system action.
 >
 > [The DCI Architecture: A New Vision of Object-Oriented Programming](https://www.artima.com/articles/dci_vision.html), 2009
 
+&nbsp;
+
 So, they proposed a fix that looks like this:
 
 ![DCI](/dci.jpg)
 *The DCI Architecture: A New Vision of Object-Oriented Programming*
 
+&nbsp;
+
 I actually think DCI is really smart, but... yikes. DCI could probably handle any level of complexity, which is a good tool to have in your pocket. If you just want to put a bit of registration logic somewhere other than User, though, it's not worth pulling in all that extra jargon. I don't need a `Context` to manage a `Role` to extend the `User` so it can participate in a registration `Interaction` - there's just got to be a more natural way.
 
 **This post is about a simple technique I've been using for over a decade that can serve as the alternative to adopting [DCI](https://en.wikipedia.org/wiki/Data,_context_and_interaction), [Clean Architecture](https://www.youtube.com/watch?v=Nsjsiz2A9mg), [Trailblazer](https://trailblazer.to/), or the like.** I've used it on a monolith serving 500,000+ students, and it's scaled our ever-growing business logic and use cases brilliantly (in my biased opinion). You can draw your own conclusions.
 
-##### The good news
+### The good news
 
 The good news is you can try it today after nothing more than being convinced. It requires no dependencies or gems, and extremely little buy in. You can do it in a new or existing project within any other structure or framework needing a place for business logic.
 
@@ -61,7 +68,7 @@ As if that wasn't enough, if you ever outgrow it, it will map well to any of the
 
 Finally, the technique should apply to many if not all OOP languages. Even though all the examples are for Ruby on Rails, and this post assumes familiarity with both Ruby and Rails, "where do I put my business logic" is a fairly common OOP issue (see ex. [this Django post on service objects](https://mitchel.me/2017/django-service-objects/)).
 
-##### The "bad" news
+### The "bad" news
 
 There's "bad" news though, and it's why this post is so long.
 
@@ -72,16 +79,6 @@ I'm also going to try to convince you, just sometimes... to prefer inheritance o
 As if that wasn't enough, and only if you're with me on the other two, I'm also going to advocate for a return to ActiveRecord callbacks. 😦😦
 
 I know. I know. But I think it'll be worth it.
-
-##### Overview
-
-* [Why gerunds are \*\*\*\*ing great](#why-gerunds-are-ing-great) argues for the naming convention.
-* [Hating on decorators](#hating-on-decorators) isn't something you see every day!
-* Here's the crazy part where I advocate for [inheritance over composition](#yes-really-inheritance-over-composition-sometimes).
-* [A joyful return to ActiveRecord callbacks](#a-joyful-return-to-activerecord-callbacks) just in case you weren't quite ready to throw your hands up.
-* [My own experiences growing Rails with gerunds](#my-own-experiences-growing-rails-with-gerunds).
-* [Trailblazer vs gerunds](#trailblazer-vs-gerunds) is a very representative example (with code).
-* [Summary](#fin) & [Further Reading](#further-reading)
 
 ---
 
@@ -168,7 +165,7 @@ Hey, wait, we do "object-oriented" programming right? Why haven't I used a gerun
 
 Well, **I think we can use this fact of grammar to consider changing the way we name system actions**, thereby improving the expressiveness of our domain models.
 
-##### Gotta put the code somewhere
+## Mirroring Life
 
 In my experience, this is how a lot of behavior starts out: instance methods on core domain models 🤢
 
@@ -204,7 +201,7 @@ Well, I have been finding the gerund style to be a much more natural way to mode
 
 You don't have to take my word for it yet. Reserve judgment until the end, where we have real world code examples.
 
-##### Question from the audience: what's wrong with service objects?
+### Question from the audience: what's wrong with service objects?
 
 Service objects are a top-notch strategy, to be sure. Extracting behavior from a core model to a service object decreases bloat on the core model, which is important for keeping velocity up.
 
@@ -232,7 +229,7 @@ Well, I've tried many times to like them. I forget what all I've tried at this p
 
 They all share a fundamental problem. Let me demonstrate.
 
-##### TodoItem extended with a decorator
+### TodoItem extended with a decorator
 
 ``` ruby
 require 'active_support/all'
@@ -295,7 +292,7 @@ Why doesn't this work as you initially expect?
 1. `TodoItem#to_json` calls `TodoItem#as_json` _**not**_ `TodoItemPresenter#as_json`.
 1. There is no 3. It never touches `TodoItemPresenter#as_json` so we get none of our extended functionality.
 
-This issue is also referred to as [self-schizophrenia](https://en.wikipedia.org/wiki/Schizophrenia_(object-oriented_programming)) in OOP — the decorated object doesn't know about its decorator, so any self-referential calls bypass the decoration entirely. It's important to point out the inaccuracy of this term, though. It means to describe a mental break involving multiple identities, but if we _must_ make mental health analogies, this would be [dissociative identity disorder](https://en.wikipedia.org/wiki/Dissociative_identity_disorder). Among all the things a person with schizophrenia will suffer, changing among multiple personalities is not one of them. 🤷‍♂️
+This issue is also referred to as [self-schizophrenia](https://en.wikipedia.org/wiki/Schizophrenia_(object-oriented_programming)) in OOP — the decorated object doesn't know about its decorator, so any self-referential calls bypass the decoration entirely (more like [dissociative identity disorder](https://en.wikipedia.org/wiki/Dissociative_identity_disorder), but close enough).
 
 Wikipedia's [composition over inheritance drawbacks](https://en.wikipedia.org/wiki/Composition_over_inheritance#Drawbacks) puts it diplomatically:
 
@@ -305,7 +302,7 @@ Considering all this, are decorators really a "flexible alternative to subclassi
 
 Even though we haven't gone in depth about re-embracing inheritance yet (we will next), since the presenter is fresh in your mind, let's go ahead and compare the presenter with an inheritance-based implementation.
 
-##### TodoItem extended with inheritance
+### TodoItem extended with inheritance
 
 Let's look at the same example as above, but using inheritance and gerunds instead of decorators:
 
@@ -353,7 +350,7 @@ Let's break it down. Why are we to prefer composition over inheritance?
 
 <small><i>Caveat: I'm sure the following is non-exhaustive, but these are my top inheritance issues</i></small>
 
-##### Inheritance is bad at dynamic behavior
+### Inheritance is bad at dynamic behavior
 
 > [Using composition over inheritance], alternative implementation of system behaviors is accomplished by providing another class that implements the desired behavior interface. A class that contains a reference to an interface can support implementations of the interface - **a choice that can be delayed until run time**.
 >
@@ -367,7 +364,7 @@ Due to the short-lived nature of domain models in Rails' request/response cycle,
 
 🤔
 
-##### Inheritance is bad at sharing code
+### Inheritance is bad at sharing code
 
 I ran across this article, [Goodbye Object-Oriented Programming](https://medium.com/@cscalfani/goodbye-object-oriented-programming-a59cda4c0e53), which does a good job of highlighting the downsides of inheritance (and more). TL;DR complex inheritance hierarchies for sharing code makes for bad times. Go read it if you need convincing, it'll save me some keystrokes.
 
@@ -375,7 +372,7 @@ Unlike that article though, my conclusion isn't to throw away OOP entirely.
 
 I agree with Reenskaug and Coplien when they said objects capture structure well. So, instead of quitting the whole OOP thing and coding our websites in - what then, Haskell? - let's use OOP's strengths for our domain modeling and appropriate alternatives for sharing code.
 
-##### Inheritance is GREAT at single-purpose extension
+### Inheritance is GREAT at single-purpose extension
 
 So inheritance is bad at dynamic behavior and sharing code, probably other things too. OK, but I don't need highly dynamic behavior in my domain models, and I have lots of other ways to reuse code between objects.
 
@@ -421,7 +418,7 @@ In your gerunds, the callback API becomes an asset again:
 * You have well-understood semantics around stopping the use case from executing via `throw :abort`, then providing feedback to the user, all via the `ActiveModel::Errors` API.
 * Your gerunds all have a consistent one-method interface, `#save`, which is also the same as your base domain models.
 
-### My own experiences growing Rails with gerunds
+## My own experiences growing Rails with gerunds
 
 OK, finally, enough talk. Let's get into some real code examples.
 
@@ -488,7 +485,7 @@ end
 
 &nbsp;
 
-##### Actually using the gerunds, aka `becomes`
+### Actually using the gerunds, aka `becomes`
 
 This is a good opportunity to quickly talk about various ways to instantiate inheritance-based gerunds.
 
@@ -529,7 +526,7 @@ OK, I have lots of other loving examples, but this post is long enough. I think 
 
 Let's switch gears to a comparison of a great off-the-shelf Rails architecture project: [Trailblazer](https://trailblazer.to).
 
-### Trailblazer vs Gerunds
+## Trailblazer vs Gerunds
 
 To be clear, I like [Trailblazer](https://trailblazer.to). It's done a great job of synthesizing the various architectural advice over the last decade, including thoughtful project organization and good separation of concerns. If I cracked open someone's project and found Trailblazer, I'd be stoked.
 
@@ -592,7 +589,7 @@ Woah.
 
 To my eye, compared to a Trailblazer operation, this gerund is natural, expressive, and true to "You Ain't Gonna Need It" (YAGNI) philosophy. Some day we might need the configurability and flexibility offered by Trailblazer, and when we do our gerunds will map well to Operations. Until then, the extra configurability is just making things much more complicated than they could be.
 
-### Fin!
+## Fin!
 
 This was a long post because I know I'm advocating for a lot of things that should rightfully make you go "hmmmmm." But let's recap.
 
@@ -621,7 +618,7 @@ Thanks for reading, and I'll see you in the comments!
 
 ---
 
-##### Further reading
+### Further reading
 
 [Growing Rails Applications in Practice](https://leanpub.com/growing-rails)
 
@@ -639,7 +636,7 @@ This means you could use `ActiveDecorator` without any of the drawbacks mentione
 
 TL;DR, [decorators will getcha](#hating-on-decorators) and module extension is performant in Ruby >= 2.1.
 
-##### Appendix
+### Appendix
 
 **The Gerund module**
 

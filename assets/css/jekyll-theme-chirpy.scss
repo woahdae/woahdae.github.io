@@ -9,6 +9,10 @@
 
 /* append your custom style below */
 
+:root {
+  --heading-color-secondary: #d93c3c;
+}
+
 blockquote {
   border-left: 4px solid rgb(255, 103, 25);
   margin: 20px 0;
@@ -22,8 +26,22 @@ blockquote em.blockquote-citation {
   color: #6d6c6c;
 }
 
+h2 {
+  position: relative; /* Establish positioning context */
+  display: block;
+}
+
+h2::after {
+  content: "";
+  display: block;
+  width: 30%;
+  margin-top: 0.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--heading-color-secondary), white 50%);
+}
+
+
 h3, h4, h5, h6 {
-  color: #d93c3c;
+  color: var(--heading-color-secondary);
 }
 
 .highlighter-rouge {
